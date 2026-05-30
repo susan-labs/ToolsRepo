@@ -1,0 +1,3 @@
+powershell "start cmd -v RunAs"
+
+powershell "start powershell -v RunAs"

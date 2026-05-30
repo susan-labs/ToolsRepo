@@ -1,0 +1,77 @@
+OS Uptime
+          # Get Windows Uptime - Powershell
+          (get-date) – (gcim Win32_OperatingSystem). LastBootUpTime 
+
+OS and Disk Health
+          # Check and Repair OS
+          DISM /Online /Cleanup-Image /CheckHealth 
+          DISM /Online /Cleanup-Image /ScanHealth 
+          DISM /Online /Cleanup-Image /RestoreHealth 
+          sfc /scannow
+          
+          # Reinstall Windows Apps
+          Get-AppXPackage -allusers | Foreach {Add-AppxPackage -DisableDevelopmentMode -Register "$($_.InstallLocation)\AppXManifest.xml"} 
+          
+          # Check & Repair Disk
+          CHKDSK C: /F /R /X
+
+User Account Credentials
+          # Save credentials to credential manager - Powershell
+          $sessionCredential = $host.ui.PromptForCredential("Need credentials", "Please enter your user name and password.", "", "Server Crdentials") 
+          $mpass = [System.Net.NetworkCredential]::new("",$sessionCredential.password).Password 
+          cmdkey.exe /add:COMPUTERNAME /user:$($sessionCredential.UserName) /pass:$($mpass) 
+          
+          
+          # Save credentials to Credential Manager – Command Prompt
+          cmdkey /add:COMPUTERNAME /user:username /pass:"password" 
+          
+          
+          # Test user credentials - Powershell
+          $username = Read-Host "Enter the Username" 
+          $password = Read-Host -AsSecureString "Enter the Password" 
+            
+          # Convert secure string to plain text 
+          $credential = New-Object System.Management.Automation.PSCredential ($username, $password) 
+            
+          # Attempt to create a network connection using the credentials 
+          try { 
+              $null = New-PSDrive -Name "TempDrive" -PSProvider FileSystem -Root "\\UNCPath" -Credential $credential 
+              Write-Output "Password for user $username is valid." 
+              Remove-PSDrive -Name "TempDrive" -Force 
+          } catch { 
+              Write-Output "Password for user $username is invalid." 
+          } 
+
+Unhide Windows Updates
+          # Unhide Windows Updates in Windows Settings
+          HKLM\SOFTWARE\Microsoft\Windows\Currentversion\Policies\Explorer
+          Delete SettingsPageVisibility
+
+Windows Updates
+          # Get Windows Updates - Powershell
+          Set-ExecutionPolicy Unrestricted -Force
+          Install-Module -Name PSWindowsUpdate -Force
+          Get-Package -Name PSWindowsUpdate
+          Import-Module PSWindowsUpdate
+          Install-WindowsUpdate -MicrosoftUpdate -AcceptAll -IgnoreReboot
+          Set-ExecutionPolicy Restricted -Force
+          
+
+Dell Updates
+          # Navigate to the Dell Command Installation Directory
+          cd 'C:\Program Files\Dell\CommandUpdate'
+          
+          # Scan for Updates
+          .\dcu-cli.exe /scan -silent
+          
+          # Apply Updates
+          .\dcu-cli.exe /apply -silent
+          
+          # Export Results
+          .\dcu-cli.exe /export C:\WYSCOM\Results.csv
+          
+          #Update only specific updates
+          .\dcu-cli.exe /update: XXXXX
+          
+          # Dell Command Help
+          dcu-cli.exe /help
