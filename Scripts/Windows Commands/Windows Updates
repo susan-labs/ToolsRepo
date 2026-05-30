@@ -1,0 +1,21 @@
+Unhide Windows Updates page in settings 
+
+HKLM\SOFTWARE\Microsoft\Windows\Currentversion\Policies\Explorer 
+
+ 
+
+ 
+
+Get Windows updates – Powershell 
+
+Set-ExecutionPolicy -Scope LocalMachine Unrestricted –Force 
+
+Install-Module -Name PSWindowsUpdate –Force 
+
+Get-Package -Name PSWindowsUpdate 
+
+Import-Module –Name PSWindowsUpdate 
+
+Install-WindowsUpdate -MicrosoftUpdate -AcceptAll –IgnoreReboot 
+
+Set-ExecutionPolicy -Scope LocalMachine Restricted -Force 

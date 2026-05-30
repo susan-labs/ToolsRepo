@@ -1,0 +1,123 @@
+Set a permanent static route 
+
+route add IP DESTINATION MASK 255.255.255.0 EGRESS GATEWAY –p 
+
+Example - route add 192.168.11.126 MASK 255.255.255.255 192.168.111.1 -p 
+
+ 
+
+ 
+
+Check currently open ports 
+
+netstat –aon 
+
+netstat -ano | findstr "443" 
+
+ 
+
+ 
+
+Enable or disable network adapters 
+
+Get-NetAdapter #Find interface name 
+
+netsh interface set interface 'INTERFACE NAME' enable 
+
+ 
+
+ 
+
+Restart physical network adapters that are up 
+
+Get-NetAdapter -Physical |  
+
+    Where-Object { $_.Status -eq "Up" } |  
+
+    Restart-NetAdapter 
+
+ 
+
+ 
+
+Set SSID to not auto connect 
+
+netsh wlan show profiles 
+
+netsh wlan set profileparameter name="name" connectionmode=manual 
+
+netsh wlan set profileparameter name="name" connectionmode=auto 
+
+netsh wlan set profileparameter name="name" keyMaterial="your_password" 
+
+netsh wlan delete profile name="profile_name" 
+
+ 
+
+ 
+
+Get external IP – Powershell 
+
+$tmp =Invoke-WebRequest -URI http://myip.dnsomatic.com/ 
+
+$tmp.Content 
+
+ 
+
+ 
+
+Speed test – Powershell 
+
+irm asheroto.com/speedtest | iex 
+
+ 
+
+ 
+
+Wake on LAN 
+
+# Update MAC Address first 
+
+'54-BF-64-93-4A-86' | Set-Variable 'mac' 
+
+[System.Net.NetworkInformation.NetworkInterface]::GetAllNetworkInterfaces() |  
+
+    Where-Object {  
+
+        $_.NetworkInterfaceType -ne [System.Net.NetworkInformation.NetworkInterfaceType]::Loopback -and  
+
+        $_.OperationalStatus -eq [System.Net.NetworkInformation.OperationalStatus]::Up  
+
+    } |  
+
+    ForEach-Object {  
+
+        $targetPhysicalAddressBytes = [System.Net.NetworkInformation.PhysicalAddress]::Parse(($mac.ToUpper() -replace '[^0-9A-F]','')).GetAddressBytes() 
+
+        $packet = [byte[]](,0xFF * 102) 
+
+        6..101 | ForEach-Object {  
+
+            $packet[$_] = $targetPhysicalAddressBytes[($_ % 6)]  
+
+        } 
+
+        $client = [System.Net.Sockets.UdpClient]::new([System.Net.IPEndPoint]::new(($_.GetIPProperties().UnicastAddresses | Where-Object {  
+
+            $_.Address.AddressFamily -eq [System.Net.Sockets.AddressFamily]::InterNetwork  
+
+        })[0].Address, 0)) 
+
+        try {  
+
+            $client.Send($packet, $packet.Length, [System.Net.IPEndPoint]::new([System.Net.IPAddress]::Broadcast, 9)) | Out-Null  
+
+        } finally {  
+
+            $client.Dispose()  
+
+        } 
+
+    } 
+
+ 

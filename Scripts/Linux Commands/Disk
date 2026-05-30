@@ -1,0 +1,4 @@
+Check Diskspace 
+
+du -sh -- *  | sort –rh 
+sudo du -a / | sort -n -r | head -n 10 

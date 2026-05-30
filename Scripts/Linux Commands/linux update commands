@@ -1,0 +1,41 @@
+Linux Updates 
+
+Update 
+
+sudo apt-get update 
+
+sudo apt-get upgrade 
+
+sudo apt-get dist-upgrade 
+
+ 
+
+Clean 
+
+sudo apt-get autoremove 
+
+sudo apt-get autoclean 
+
+sudo apt-get clean 
+
+ 
+
+Fix Broken 
+
+sudo apt-get check 
+
+sudo apt-get -f install 
+
+ 
+
+Audit & Configure unpacked but unconfigured packages 
+
+sudo dpkg --audit 
+
+sudo dpkg --configure -a 
+
+ 
+
+All of above combined – understand what this does before using it 
+
+sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get dist-upgrade -y && sudo apt-get autoremove -y && sudo apt-get autoclean && sudo apt-get clean && sudo dpkg --audit && sudo apt-get check && (sudo dpkg --configure -a || sudo apt-get -f install) 

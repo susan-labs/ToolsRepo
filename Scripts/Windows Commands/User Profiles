@@ -1,0 +1,23 @@
+Access current users registry without being in that session 
+
+HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList 
+ 
+
+Shell folders – Path location of documents, desktop etc. 
+
+HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders 
+
+  
+
+Microsoft AAD profile location 
+
+C:\Users\<Username>\AppData\Local\Packages\Microsoft.AAD.BrokerPlugin 
+
+
+ 
+
+Delete AAD folder while logged in 
+
+taskkill /im "Microsoft.AAD.BrokerPlugin.exe" /f 
+
+rd "%LocalAppData%\Packages\Microsoft.AAD.BrokerPlugin_cw5n1h2txyewy" /s /q 

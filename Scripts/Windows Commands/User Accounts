@@ -1,0 +1,75 @@
+Create user 
+
+net user /add wys_admin wys@dm!1 
+
+ 
+
+ 
+
+Activate a disabled user account 
+
+net user wys_admin /active:yes 
+
+ 
+
+ 
+
+Add a local user to the Administrators group 
+
+net localgroup administrators wys_admin /add 
+
+ 
+
+ 
+
+Save to Credential Manager - Powershell 
+
+$sessionCredential = $host.ui.PromptForCredential("Need credentials", "Please enter your user name and password.", "", "Server Crdentials") 
+
+$mpass = [System.Net.NetworkCredential]::new("",$sessionCredential.password).Password 
+
+cmdkey.exe /add:COMPUTERNAME /user:$($sessionCredential.UserName) /pass:$($mpass) 
+
+ 
+
+ 
+
+Save credentials to Credential Manager – Command Prompt 
+
+cmdkey /add:COMPUTERNAME /user:Domain\username /pass:"NBHJ*&VW82.sch17" 
+
+ 
+
+ 
+
+Test user credentials - Powershell 
+
+# Prompt for username and password 
+
+$username = Read-Host "Enter the Username" 
+
+$password = Read-Host -AsSecureString "Enter the Password" 
+
+  
+
+# Convert secure string to plain text 
+
+$credential = New-Object System.Management.Automation.PSCredential ($username, $password) 
+
+  
+
+# Attempt to create a network connection using the credentials 
+
+try { 
+
+    $null = New-PSDrive -Name "TempDrive" -PSProvider FileSystem -Root "\\UNC path\" -Credential $credential 
+
+    Write-Output "Password for user $username is valid." 
+
+    Remove-PSDrive -Name "TempDrive" -Force 
+
+} catch { 
+
+    Write-Output "Password for user $username is invalid." 
+
+} 

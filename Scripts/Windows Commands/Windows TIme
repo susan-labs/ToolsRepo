@@ -1,0 +1,23 @@
+Update and Resync time provider 
+
+w32tm /config /manualpeerlist:"au.pool.ntp.org" /syncfromflags:manual /reliable:yes /update 
+
+w32tm /config /update 
+
+net stop w32time 
+
+net start w32time 
+
+timeout /t 2 /nobreak 
+
+w32tm /resync /rediscover 
+
+w32tm /query /source 
+
+ 
+
+ 
+
+Force disable VM getting time from host 
+
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\W32Time\TimeProviders\VMICTimeProvider" /v Enabled /t REG_DWORD /d 0 /f 

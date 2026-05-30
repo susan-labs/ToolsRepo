@@ -1,0 +1,21 @@
+Open ports 
+
+sudo ss -ltn 
+
+ 
+
+What is using X port 
+
+sudo lsof -i TCP:443 
+
+  
+
+Get external IP 
+
+curl https://ipinfo.io/ip 
+
+ 
+
+Check SSL Chain Behind Proxy – Linux 
+
+curl -svo /dev/null --resolve 

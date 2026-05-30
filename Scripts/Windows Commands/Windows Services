@@ -1,0 +1,9 @@
+Restart windows service – Command Prompt 
+
+sc stop "HealthTLService" 
+
+sc config "HealthTLService" start= disabled 
+
+sc stop "ThreatLockerService" 
+
+sc config "ThreatLockerService" start= disabled 

@@ -1,0 +1,25 @@
+Fix print nightmare 
+
+reg add "HKLM\Software\Policies\Microsoft\Windows NT\Printers\PointAndPrint" /v RestrictDriverInstallationToAdministrators /t REG_DWORD /d 0 /f 
+
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\Printers\PointAndPrint"  /v NoWarningNoElevationOnInstall /t REG_DWORD /d 0 /f 
+
+reg add "HKLM\System\CurrentControlSet\Control\Print" /v RpcAuthnLevelPrivacyEnabled /t REG_DWORD /d 0 /f 
+
+ 
+
+ 
+
+Install the Windows Print Management component 
+
+dism /Online /Remove-Capability /CapabilityName:Print.Management.Console~~~~0.0.1.0 
+
+dism /Online /add-Capability /CapabilityName:Print.Management.Console~~~~0.0.1.0 
+
+ 
+
+ 
+
+Open the old Print UI 
+
+shell:::{A8A91A66-3A7D-4424-8D24-04E180695C7A}  
