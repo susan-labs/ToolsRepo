@@ -1,0 +1,13 @@
+Set date/time - DHCP Server 
+
+        configure 
+        sntp unicast 
+        sntp 30 
+        sntp server priority 1 192.168.204.254 
+        ip timep dhcp interval 1 
+        time timezone 600 
+        time daylight-time-rule user-defined begin 1 Sun Oct 2:00 end 1 Sun Apr 3:00 offset 60 
+        timesync sntp 
+        write memory 
+        show time 
+        show sntp  

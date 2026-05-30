@@ -1,0 +1,46 @@
+Reset Cisco switch password via console 
+
+Speed: 115200 
+Parity: None 
+Flow Control: None 
+
+Connect to switch via console cable and putty 
+Reboot the switch 
+In the putty window during boot 
+  Wait for - Autoboot in 2 seconds - press RETURN or Esc. to abort and enter prom. 
+enable
+Press enter 
+Press Option 3 
+  Wait for it to finish booting and type 
+enable 
+config 
+username EXISTINGUSERNAME password NEWPASSWORD 
+exit 
+Write 
+
+Credits: https://www.youtube.com/watch?v=NBq5AIE8plI
+
+
+Set date/time - DHCP Server 
+Some of the 8P switches are slightly different so you may need to tab through commands to get the correct one. 
+Paste below and you will see which command didn't work and adjust accordingly. 
+If there are other sntp servers, remove those as well with the 'no sntp server' command. 
+
+          configure terminal 
+          clock timezone AEST 10 
+          clock summer-time AEDT recurring 1 Sun Oct 2:00 1 Sun Apr 3:00 60 
+          clock source sntp 
+          no sntp server au.pool.ntp.org 
+          no sntp server pool.ntp.org 
+          no sntp server time-a.timefreq.bldrdoc.gov 
+          no sntp server time-b.timefreq.bldrdoc.gov 
+          no sntp server time-c.timefreq.bldrdoc.gov 
+          no sntp server time-pnp.cisco.com 
+          sntp server 192.168.204.254 
+          sntp server 192.168.204.254 poll 
+          sntp unicast client enable 
+          sntp unicast client poll 
+          end 
+          write memory 
+          show clock 
+          show sntp status 
